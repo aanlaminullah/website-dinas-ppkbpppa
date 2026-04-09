@@ -12,22 +12,20 @@ class AdminUserSeeder extends Seeder
     {
         // Admin — akses penuh termasuk Pengaturan
         User::updateOrCreate(
-            ['email' => 'admin@ortala.go.id'],
+            ['email' => 'admin@kb.go.id'],
             [
                 'name'     => 'Administrator',
                 'role'     => 'admin',
-                'email'    => 'admin@kb.go.id',
                 'password' => Hash::make('password123'),
             ]
         );
 
         // Operator — akses semua kecuali Pengaturan & Carousel (jika mode hero)
         User::updateOrCreate(
-            ['email' => 'operator@ortala.go.id'],
+            ['email' => 'operator@kb.go.id'],
             [
                 'name'     => 'Operator',
                 'role'     => 'operator',
-                'email'    => 'operator@kb.go.id',
                 'password' => Hash::make('operator123'),
             ]
         );
