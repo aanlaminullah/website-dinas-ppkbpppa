@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name'     => 'Administrator',
                 'role'     => 'admin',
-                'email'    => 'admin@ortala.go.id',
+                'email'    => 'admin@kb.go.id',
                 'password' => Hash::make('password123'),
             ]
         );
@@ -27,7 +27,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name'     => 'Operator',
                 'role'     => 'operator',
-                'email'    => 'operator@ortala.go.id',
+                'email'    => 'operator@kb.go.id',
                 'password' => Hash::make('operator123'),
             ]
         );
