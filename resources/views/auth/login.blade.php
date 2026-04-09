@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Dinas Perikanan Bolmut</title>
+    <title>Login - {{ setting('nama_dinas', 'Dinas PPKBPPPA') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
@@ -48,10 +48,9 @@
                     <img src="{{ asset('img/logo-bolmut.png') }}" alt="Logo Bolmut"
                         class="w-24 h-24 object-contain drop-shadow-lg" />
                 </div>
-                <h2 class="text-4xl font-bold mb-4 font-heading">Dinas Perikanan</h2>
+                <h2 class="text-4xl font-bold mb-4 font-heading">{{ setting('nama_dinas', 'Dinas PPKBPPPA') }}</h2>
                 <p class="text-blue-100 text-lg leading-relaxed">
-                    "Data yang akurat adalah fondasi kebijakan perikanan yang tepat sasaran untuk kesejahteraan
-                    nelayan."
+                    "{{ setting('login_quote', 'Mewujudkan Keluarga Sejahtera, Perempuan Berdaya, dan Anak Terlindungi.') }}"
                 </p>
                 <p class="text-blue-200 text-sm mt-6 font-semibold tracking-widest uppercase">Kabupaten Bolaang
                     Mongondow Utara</p>
@@ -63,7 +62,8 @@
             <div class="w-full max-w-md space-y-8">
                 <div class="text-center lg:text-left">
                     <h2 class="text-3xl font-bold text-gray-900 tracking-tight font-heading">Selamat Datang Kembali</h2>
-                    <p class="mt-2 text-sm text-gray-500">Silakan masuk ke akun admin Dinas Perikanan Bolmut.</p>
+                    <p class="mt-2 text-sm text-gray-500">Silakan masuk ke akun admin
+                        {{ setting('nama_dinas', 'Dinas PPKBPPPA') }}.</p>
                 </div>
 
                 {{-- Error --}}
@@ -150,7 +150,8 @@
 
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-500">
-                        &copy; {{ date('Y') }} Dinas Perikanan Kabupaten Bolaang Mongondow Utara
+                        &copy; {{ date('Y') }} {{ setting('nama_dinas', 'Dinas PPKBPPPA') }} Kabupaten Bolaang
+                        Mongondow Utara
                     </p>
                 </div>
             </div>

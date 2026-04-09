@@ -5,10 +5,12 @@
 
 @section('content')
     <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
-        @csrf @method('PUT')
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="active_tab" id="active_tab" value="identitas">
 
         {{-- Tab Navigation --}}
-        <div x-data="{ tab: 'identitas' }" class="space-y-6">
+        <div x-data="{ tab: new URLSearchParams(window.location.search).get('tab') || 'identitas' }" class="space-y-6">
             <div class="flex gap-2 bg-card rounded-xl shadow-card p-2 w-fit">
                 @foreach ([
             'identitas' => 'Identitas',
@@ -16,7 +18,7 @@
             'warna' => 'Warna Tema',
             'modul' => 'Modul',
         ] as $key => $label)
-                    <button type="button" @click="tab = '{{ $key }}'"
+                    <button type="button" data-tab="{{ $key }}" @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}' ? 'bg-primary text-white shadow' :
                             'text-secondary hover:text-primary'"
                         class="px-4 py-2 rounded-lg text-sm font-semibold transition">
@@ -35,12 +37,18 @@
                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-heading mb-1">Singkatan Dinas</label>
+                    <input type="text" name="singkatan_dinas" value="{{ setting('singkatan_dinas') }}"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                    <p class="text-xs text-secondary mt-1">Digunakan di sidebar dashboard. Contoh: Diskan</p>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-heading mb-1">Sub Nama Dinas</label>
                     <input type="text" name="sub_nama_dinas" value="{{ setting('sub_nama_dinas') }}"
                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-heading mb-1">Nama Singkat</label>
+                    <label class="block text-sm font-medium text-heading mb-1">Nama Singkat Daerah</label>
                     <input type="text" name="nama_singkat" value="{{ setting('nama_singkat') }}"
                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
                     <p class="text-xs text-secondary mt-1">Digunakan di sidebar dashboard. Contoh: Bolmut</p>
@@ -56,9 +64,35 @@
                     <input type="file" name="logo" accept="image/*"
                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" />
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-heading mb-1">Alias Berita (API)</label>
+                    <input type="text" name="berita_alias" value="{{ setting('berita_alias', 'bpkd') }}"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                    <p class="text-xs text-secondary mt-1">Alias unit kerja untuk mengambil berita dari API. Contoh: bpkd,
+                        diskan</p>
+                </div>
             </div>
 
             {{-- Tab Hero --}}
+            <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 bg-gray-50">
+                <div>
+                    <p class="text-sm font-semibold text-heading">Mode Tampilan Halaman Utama</p>
+                    <p class="text-xs text-secondary mt-0.5">Pilih antara Hero (teks sambutan) atau Carousel (slideshow
+                        foto)</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="hero_mode" value="hero"
+                            {{ setting('hero_mode', 'carousel') === 'hero' ? 'checked' : '' }} class="text-primary" />
+                        <span class="text-sm font-medium text-heading">Hero</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer ml-4">
+                        <input type="radio" name="hero_mode" value="carousel"
+                            {{ setting('hero_mode', 'carousel') === 'carousel' ? 'checked' : '' }} class="text-primary" />
+                        <span class="text-sm font-medium text-heading">Carousel</span>
+                    </label>
+                </div>
+            </div>
             <div x-show="tab === 'hero'" class="bg-card rounded-xl shadow-card p-6 space-y-5">
                 <h5 class="font-bold text-heading text-lg border-b border-gray-100 pb-3">Konten Halaman Utama</h5>
 
@@ -125,11 +159,14 @@
             {{-- Tab Modul --}}
             <div x-show="tab === 'modul'" class="bg-card rounded-xl shadow-card p-6 space-y-4">
                 <h5 class="font-bold text-heading text-lg border-b border-gray-100 pb-3">Aktifkan / Nonaktifkan Modul</h5>
-                <p class="text-secondary text-sm">Modul yang dinonaktifkan tidak akan muncul di navbar maupun sidebar admin.
+                <p class="text-secondary text-sm">Modul yang dinonaktifkan tidak akan muncul di navbar maupun sidebar
+                    admin.
                 </p>
 
                 @foreach ([
-            'modul_publikasi_data' => ['label' => 'Publikasi Data', 'desc' => 'Data produksi & tangkap perikanan'],
+            'modul_publikasi_data' => ['label' => 'Data Produksi Budidaya', 'desc' => 'Data produksi budidaya perikanan'],
+            'modul_data_tangkap' => ['label' => 'Data Tangkap', 'desc' => 'Data produksi tangkap perikanan'],
+            'modul_publikasi_dokumen' => ['label' => 'Publikasi Dokumen', 'desc' => 'Dokumen publik seperti laporan, SK, peraturan'],
             'modul_pengumuman' => ['label' => 'Pengumuman', 'desc' => 'Pengumuman & informasi publik'],
             'modul_berita' => ['label' => 'Berita', 'desc' => 'Kabar & artikel berita'],
             'modul_struktur_organisasi' => ['label' => 'Struktur Organisasi', 'desc' => 'Data pejabat dinas'],

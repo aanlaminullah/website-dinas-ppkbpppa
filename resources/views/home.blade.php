@@ -4,47 +4,141 @@
 
 @section('content')
 
-    <header class="relative bg-white overflow-hidden">
-        <div class="absolute inset-0">
-            <img class="w-full h-full object-cover opacity-100"
-                src="{{ setting('hero_gambar') ? Storage::url(setting('hero_gambar')) : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073' }}"
-                alt="Ocean Background" />
-            <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
-        </div>
-
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-            <div class="max-w-2xl">
-                <div
-                    class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-fish-blue text-xs font-bold mb-6 border border-blue-100">
-                    <span class="mr-2">🐟</span> POTENSI MARITIM
-                </div>
-                <h2 class="text-4xl lg:text-5xl font-heading font-bold text-gray-900 leading-tight mb-6">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-fish-blue to-blue-400">
-                        {{ setting('hero_judul', 'Mewujudkan Perikanan Maju & Berkelanjutan') }}
-                    </span>
-                </h2>
-                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                    {{ setting('hero_subjudul') }}
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <button
-                        class="bg-fish-blue text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-sky-700 transition shadow-lg shadow-blue-900/20 flex items-center">
-                        Info Harga Ikan
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <button
-                        class="bg-white text-gray-700 border border-gray-300 px-8 py-3.5 rounded-lg font-semibold hover:bg-gray-50 transition flex items-center">
-                        Profil Dinas
-                    </button>
+    @if (setting('hero_mode', 'carousel') === 'hero')
+        {{-- Hero --}}
+        <header class="relative bg-white overflow-hidden">
+            <div class="absolute inset-0">
+                <img class="w-full h-full object-cover opacity-100"
+                    src="{{ setting('hero_gambar') ? Storage::url(setting('hero_gambar')) : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073' }}"
+                    alt="Ocean Background" />
+                <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+            </div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-48">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl lg:text-5xl font-heading font-bold text-gray-900 leading-tight mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-fish-blue to-blue-400">
+                            {{ setting('hero_judul', 'Mewujudkan Perikanan Maju & Berkelanjutan') }}
+                        </span>
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        {{ setting('hero_subjudul') }}
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="{{ route('publikasi-data.index') }}"
+                            class="bg-fish-blue text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-sky-700 transition shadow-lg shadow-blue-900/20 flex items-center">
+                            Publikasi Data
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="{{ route('visi-misi.index') }}"
+                            class="bg-white text-gray-700 border border-gray-300 px-8 py-3.5 rounded-lg font-semibold hover:bg-gray-50 transition flex items-center">
+                            Profil Dinas
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="hidden lg:block absolute right-20 top-20 w-80 h-80 bg-blue-100/30 rounded-full blur-3xl"></div>
-    </header>
+            <div class="hidden lg:block absolute right-20 top-20 w-80 h-80 bg-blue-100/30 rounded-full blur-3xl"></div>
+        </header>
+    @else
+        {{-- Carousel --}}
+        <div class="relative w-full overflow-hidden" id="mainCarousel" style="height: 520px;">
+            <div class="carousel-slides absolute inset-0 flex transition-transform duration-700 ease-in-out"
+                id="carouselTrack">
+                @forelse($carouselItems as $item)
+                    <div class="carousel-slide relative w-full h-full flex-shrink-0">
+                        <img src="{{ Storage::url($item->gambar) }}" alt="{{ $item->judul }}"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                        <div class="absolute bottom-16 left-0 right-0 px-8 md:px-16">
+                            <h2 class="text-white text-2xl md:text-3xl font-bold leading-snug drop-shadow">
+                                {{ $item->judul }}
+                            </h2>
+                            @if ($item->deskripsi)
+                                <p class="text-white/80 text-sm mt-2 max-w-xl">{{ $item->deskripsi }}</p>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="carousel-slide relative w-full h-full flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073"
+                            class="w-full h-full object-cover" />
+                    </div>
+                @endforelse
+            </div>
 
-    <div class="relative z-10 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button id="carouselPrev"
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button id="carouselNext"
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2" id="carouselDots">
+                @foreach ($carouselItems as $index => $item)
+                    <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all"
+                        data-index="{{ $index }}"></button>
+                @endforeach
+            </div>
+        </div>
+
+        @push('scripts')
+            <script>
+                (function() {
+                    const track = document.getElementById('carouselTrack');
+                    const dots = document.querySelectorAll('.carousel-dot');
+                    const total = dots.length;
+                    let current = 0;
+                    let timer = null;
+
+                    if (!track || total === 0) return;
+
+                    function goTo(index) {
+                        current = (index + total) % total;
+                        track.style.transform = `translateX(-${current * 100}%)`;
+                        dots.forEach((d, i) => {
+                            d.classList.toggle('bg-white', i === current);
+                            d.classList.toggle('bg-white/40', i !== current);
+                            d.style.width = i === current ? '24px' : '10px';
+                            d.style.borderRadius = '9999px';
+                        });
+                    }
+
+                    function startTimer() {
+                        clearInterval(timer);
+                        timer = setInterval(() => goTo(current + 1), 5000);
+                    }
+
+                    document.getElementById('carouselNext')?.addEventListener('click', () => {
+                        goTo(current + 1);
+                        startTimer();
+                    });
+                    document.getElementById('carouselPrev')?.addEventListener('click', () => {
+                        goTo(current - 1);
+                        startTimer();
+                    });
+                    dots.forEach(d => d.addEventListener('click', () => {
+                        goTo(+d.dataset.index);
+                        startTimer();
+                    }));
+
+                    goTo(0);
+                    startTimer();
+                })();
+            </script>
+        @endpush
+    @endif
+
+
+
+    {{-- <div class="relative z-10 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-6 rounded-xl shadow-xl border border-gray-100">
 
             <a href="#"
@@ -99,69 +193,72 @@
             </a>
 
         </div>
-    </div>
+    </div> --}}
 
     <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
+            {{-- Berita --}}
             <div class="lg:col-span-2 space-y-8">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
-                    <h3 class="text-2xl font-heading font-bold text-gray-900 border-l-4 border-fish-blue pl-3">Berita
-                    </h3>
-                    <a href="#" class="text-sm font-semibold text-fish-blue hover:underline">Lihat Semua</a>
+                    <h3 class="text-2xl font-heading font-bold text-gray-900 border-l-4 border-fish-blue pl-3">Berita</h3>
+                    @if (setting_bool('modul_berita'))
+                        <a href="{{ route('berita.index') }}"
+                            class="text-sm font-semibold text-fish-blue hover:underline">Lihat Semua</a>
+                    @endif
                 </div>
 
-                <article class="group relative rounded-2xl overflow-hidden shadow-lg h-96">
-                    <img src="https://images.unsplash.com/photo-1507124441518-c9584b9dc520?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt="Fisherman News"
-                        class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-8">
-                        <span
-                            class="bg-fish-blue text-white text-xs font-bold px-2 py-1 rounded mb-3 inline-block">UTAMA</span>
-                        <h4 class="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-blue-200 transition">
-                            Penyaluran Bantuan Perahu dan Alat Tangkap Ramah Lingkungan
-                        </h4>
-                        <p class="text-gray-300 text-sm line-clamp-2 mb-4">
-                            Pemerintah Kabupaten terus berkomitmen meningkatkan kesejahteraan nelayan lokal dengan bantuan
-                            armada modern.
-                        </p>
-                        <span class="text-xs text-gray-400">📅 24 Juli 2025</span>
+                @if ($latestBerita->isEmpty())
+                    <div class="text-center py-12 text-gray-400">
+                        <p class="text-sm italic">Belum ada berita.</p>
                     </div>
-                </article>
+                @else
+                    {{-- Berita Utama --}}
+                    @php $utama = $latestBerita->first(); @endphp
+                    <a href="{{ route('berita.show', $utama['slug']) }}"
+                        class="group relative rounded-2xl overflow-hidden shadow-lg h-96 block">
+                        <img src="https://ppid.bolmutkab.go.id/img/{{ $utama['gambar'] }}"
+                            alt="{{ $utama['judul_berita'] }}"
+                            class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                            onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800'" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8">
+                            <h4
+                                class="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-blue-200 transition">
+                                {{ $utama['judul_berita'] }}
+                            </h4>
+                            <span class="text-xs text-gray-300">{{ $utama['created_at'] }}</span>
+                        </div>
+                    </a>
 
-                <div class="grid md:grid-cols-2 gap-6">
-                    <article
-                        class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                        <div class="h-48 overflow-hidden rounded-t-xl relative">
-                            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-                                class="w-full h-full object-cover" />
-                            <span
-                                class="absolute top-2 right-2 bg-white/90 text-fish-blue text-xs font-bold px-2 py-1 rounded shadow">Sosialisasi</span>
+                    {{-- 2 Berita Lainnya --}}
+                    @if ($latestBerita->count() > 1)
+                        <div class="grid md:grid-cols-2 gap-6">
+                            @foreach ($latestBerita->skip(1) as $berita)
+                                <a href="{{ route('berita.show', $berita['slug']) }}"
+                                    class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition group">
+                                    <div class="h-48 overflow-hidden rounded-t-xl relative">
+                                        <img src="https://ppid.bolmutkab.go.id/img/{{ $berita['gambar'] }}"
+                                            alt="{{ $berita['judul_berita'] }}"
+                                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                            onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600'" />
+                                        <span
+                                            class="absolute top-2 right-2 bg-white/90 text-fish-blue text-xs font-bold px-2 py-1 rounded shadow capitalize">
+                                            {{ $berita['kategori'] ?? 'Berita' }}
+                                        </span>
+                                    </div>
+                                    <div class="p-5">
+                                        <span class="text-xs text-gray-400 block mb-2">{{ $berita['created_at'] }}</span>
+                                        <h4
+                                            class="font-bold text-gray-900 mb-2 group-hover:text-fish-blue transition line-clamp-2">
+                                            {{ $berita['judul_berita'] }}
+                                        </h4>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
-                        <div class="p-5">
-                            <span class="text-xs text-gray-400 block mb-2">01 Desember 2025</span>
-                            <h4 class="font-bold text-gray-900 mb-2 hover:text-fish-blue transition">
-                                Pelatihan Budidaya Ikan Air Tawar Sistem Bioflok
-                            </h4>
-                        </div>
-                    </article>
-                    <article
-                        class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                        <div class="h-48 overflow-hidden rounded-t-xl relative">
-                            <img src="https://plus.unsplash.com/premium_photo-1713316834449-d8fbe5f2aad3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                class="w-full h-full object-cover" />
-                            <span
-                                class="absolute top-2 right-2 bg-white/90 text-fish-blue text-xs font-bold px-2 py-1 rounded shadow">Konservasi</span>
-                        </div>
-                        <div class="p-5">
-                            <span class="text-xs text-gray-400 block mb-2">26 November 2025</span>
-                            <h4 class="font-bold text-gray-900 mb-2 hover:text-fish-blue transition">
-                                Pelepasliaran Tukik dan Penanaman Mangrove Pesisir
-                            </h4>
-                        </div>
-                    </article>
-                </div>
+                    @endif
+                @endif
             </div>
 
             <div class="space-y-8">
@@ -198,25 +295,43 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                    <h3 class="font-heading font-bold text-gray-900 border-l-4 border-fish-blue pl-3 mb-4">Galeri Video
-                    </h3>
-                    <div class="rounded-lg overflow-hidden bg-black aspect-video relative group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                            class="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition" />
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div
-                                class="w-12 h-12 bg-fish-blue rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z">
-                                    </path>
-                                </svg>
-                            </div>
+                @if (setting_bool('modul_publikasi_dokumen') && $latestDokumen->count() > 0)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-fish-dark text-white p-4 flex justify-between items-center">
+                            <h3 class="font-bold text-lg">📄 Publikasi Dokumen</h3>
+                            <a href="{{ route('publikasi-dokumen.index') }}"
+                                class="text-xs bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded transition">Lihat Semua</a>
+                        </div>
+                        <div class="divide-y divide-gray-100">
+                            @foreach ($latestDokumen as $dok)
+                                <div class="flex items-center gap-3 p-4 hover:bg-gray-50 transition">
+                                    <div
+                                        class="shrink-0 w-9 h-9 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center">
+                                        <i class="bx {{ $dok->ikonFile() }} text-xl {{ $dok->warnaIkon() }}"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-800 truncate">{{ $dok->judul }}</p>
+                                        <div class="flex items-center gap-2 mt-0.5">
+                                            @if ($dok->kategori)
+                                                <span
+                                                    class="text-xs text-fish-blue font-medium">{{ $dok->kategori }}</span>
+                                            @endif
+                                            <span
+                                                class="text-xs text-gray-400">{{ $dok->tanggal->translatedFormat('d F Y') }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('publikasi-dokumen.download', $dok) }}"
+                                        class="shrink-0 text-fish-blue hover:bg-blue-50 p-1.5 rounded-lg transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <p class="mt-3 text-sm font-medium text-gray-800">Potensi Perikanan Tangkap Laut Bolmut</p>
-                </div>
+                @endif
 
             </div>
         </div>
@@ -226,48 +341,119 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-white">Lensa Kegiatan</h2>
-                <div class="flex gap-2">
-                    <button class="bg-gray-700 text-white p-2 rounded-full hover:bg-fish-blue transition">&larr;</button>
-                    <button class="bg-gray-700 text-white p-2 rounded-full hover:bg-fish-blue transition">&rarr;</button>
-                </div>
+                <a href="{{ route('lensa-kegiatan.index') }}"
+                    class="text-sm font-semibold text-fish-accent hover:underline transition">
+                    Lihat Lainnya &rarr;
+                </a>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden relative group">
-                    <img src="https://www.mediasuaramabes.com/wp-content/uploads/2025/06/40909.jpg"
-                        class="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
-                    <div
-                        class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-end p-4">
-                        <span class="text-white text-xs font-medium">Panen Raya</span>
+                @forelse($lensaKegiatan as $item)
+                    <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden relative group">
+                        <img src="{{ Storage::url($item->foto) }}" alt="{{ $item->judul }}"
+                            class="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
+                        @if ($item->judul)
+                            <div
+                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                                <span class="text-white text-xs font-medium">{{ $item->judul }}</span>
+                            </div>
+                        @endif
                     </div>
-                </div>
-                <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden relative group">
-                    <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                        class="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
-                </div>
-                <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden relative group">
-                    <img src="https://lh3.googleusercontent.com/proxy/j9VDwK7i_KJeJdaGT792xIOoxfrapLboRG7v3JcRpKXFeVb7yDbZ0BKa6Z82Poshb6lNUtBil5FtfoXojUtn77L72z4WWPMJwEYsPQwjIdscW-vFc8p95f7bQ8emTyvRtNqHDyBTEN02KIdkwzt-4jLQPvEbSzQroamhR7j65LcewcliQMT4VleDDVh7ycrthoQ4GILCflXvkZBNjnT_hXYSO118pP4"
-                        class="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
-                </div>
-                <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden relative group">
-                    <img src="https://mail.kapuashulukab.go.id/home/public/assets/images/posts/md_dinas-perikanan-ikuti-rapat-sinkronisasi-dak-tahun-2021-dan-monev-terpadu.jpeg"
-                        class="w-full h-full object-cover transition duration-300 group-hover:scale-110" />
-                </div>
+                @empty
+                    <div class="col-span-4 py-10 text-center text-gray-400 text-sm italic">
+                        Belum ada foto kegiatan.
+                    </div>
+                @endforelse
             </div>
         </div>
 
-        <div class="border-b border-gray-800 bg-gray-800/50 py-8 mt-12">
-            <div class="max-w-7xl mx-auto px-4 text-center">
-                <p class="text-xs uppercase tracking-widest text-gray-500 mb-4">
-                    Instansi Terkait
-                </p>
-                <div
-                    class="flex flex-wrap justify-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                    <img src="{{ asset('img/logo-kemenperikan.png') }}" class="h-10" />
-                    <img src="{{ asset('img/logo-komdigi.png') }}" class="h-8" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Lambang_Polri.png" class="h-8" />
+        @if ($instansiTerkait->count() > 0)
+            <div class="border-b border-gray-800 bg-gray-800/50 py-8 mt-12">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <p class="text-xs uppercase tracking-widest text-gray-500 mb-6">Instansi Terkait</p>
+                    <div class="flex flex-wrap justify-center items-center gap-6">
+                        @foreach ($instansiTerkait as $instansi)
+                            @if ($instansi->url)
+                                <a href="{{ $instansi->url }}" target="_blank" rel="noopener"
+                                    class="group relative flex items-center justify-center opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+                                    <div
+                                        class="w-12 h-12 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-fish-blue/30 transition">
+                                        <img src="{{ Storage::url($instansi->logo) }}" alt="{{ $instansi->nama }}"
+                                            class="w-full h-full object-cover" />
+                                    </div>
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
+                                        {{ $instansi->nama }}
+                                        <div
+                                            class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900">
+                                        </div>
+                                    </div>
+                                </a>
+                            @else
+                                <div
+                                    class="group relative flex items-center justify-center opacity-60 hover:opacity-80 transition-all duration-300">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden">
+                                        <img src="{{ Storage::url($instansi->logo) }}" alt="{{ $instansi->nama }}"
+                                            class="w-full h-full object-cover" />
+                                    </div>
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
+                                        {{ $instansi->nama }}
+                                        <div
+                                            class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </section>
+
+
+    @push('scripts')
+        <script>
+            (function() {
+                const track = document.getElementById('carouselTrack');
+                const dots = document.querySelectorAll('.carousel-dot');
+                const total = dots.length;
+                let current = 0;
+                let timer = null;
+
+                function goTo(index) {
+                    current = (index + total) % total;
+                    track.style.transform = `translateX(-${current * 100}%)`;
+                    dots.forEach((d, i) => {
+                        d.classList.toggle('bg-white', i === current);
+                        d.classList.toggle('bg-white/40', i !== current);
+                        d.style.width = i === current ? '24px' : '10px';
+                        d.style.borderRadius = '9999px';
+                    });
+                }
+
+                function startTimer() {
+                    clearInterval(timer);
+                    timer = setInterval(() => goTo(current + 1), 5000);
+                }
+
+                document.getElementById('carouselNext').addEventListener('click', () => {
+                    goTo(current + 1);
+                    startTimer();
+                });
+                document.getElementById('carouselPrev').addEventListener('click', () => {
+                    goTo(current - 1);
+                    startTimer();
+                });
+                dots.forEach(d => d.addEventListener('click', () => {
+                    goTo(+d.dataset.index);
+                    startTimer();
+                }));
+
+                goTo(0);
+                startTimer();
+            })();
+        </script>
+    @endpush
 
 @endsection
