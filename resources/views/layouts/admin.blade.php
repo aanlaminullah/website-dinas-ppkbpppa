@@ -75,8 +75,7 @@
                     class="flex items-center gap-2 text-xl font-bold text-heading tracking-tight">
                     <img src="{{ str_starts_with(setting('logo', 'img/logo-bolmut.png'), 'img/') ? asset(setting('logo', 'img/logo-bolmut.png')) : Storage::url(setting('logo')) }}"
                         alt="Logo" class="h-8 w-auto object-contain" />
-                    <span>{{ setting('singkatan_dinas', 'Diskan') }}<span
-                            class="text-primary">{{ setting('nama_singkat', 'Bolmut') }}</span></span>
+                    <span>{{ setting('singkatan_dinas', 'Diskan') }}</span>
                 </a>
             </div>
 
